@@ -326,7 +326,8 @@ func (r *E2ERunner) BroadcastTxSync(tx *solana.Transaction) (solana.Signature, *
 	// broadcast the transaction
 	maxRetries := uint(5)
 	sig, err := r.SolanaClient.SendTransactionWithOpts(r.Ctx, tx, rpc.TransactionOpts{
-		MaxRetries: &maxRetries,
+		MaxRetries:    &maxRetries,
+		SkipPreflight: true,
 	})
 	require.NoError(r, err)
 	r.Logger.Info("broadcast success! tx sig %s; waiting for confirmation...", sig)
