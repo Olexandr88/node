@@ -340,6 +340,7 @@ func (r *E2ERunner) BroadcastTxSync(tx *solana.Transaction) (solana.Signature, *
 	// wait for the transaction to be finalized
 	var out *rpc.GetTransactionResult
 	for {
+		time.Sleep(1 * time.Second)
 		out, err = r.SolanaClient.GetTransaction(r.Ctx, sig, &rpc.GetTransactionOpts{
 			Commitment: rpc.CommitmentConfirmed,
 		})
@@ -350,7 +351,6 @@ func (r *E2ERunner) BroadcastTxSync(tx *solana.Transaction) (solana.Signature, *
 		}
 
 		require.False(r, time.Since(start) > timeout, "waiting solana tx timeout")
-		time.Sleep(1 * time.Second)
 	}
 
 	return sig, out
