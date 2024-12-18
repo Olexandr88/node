@@ -334,7 +334,7 @@ func (r *E2ERunner) BroadcastTxSync(tx *solana.Transaction) (solana.Signature, *
 
 	var (
 		start   = time.Now()
-		timeout = 2 * time.Minute // Solana tx expires automatically after 2 minutes
+		timeout = 4 * time.Minute // Solana tx expires automatically after 2 minutes, but adding a buffer just in case
 	)
 
 	// wait for the transaction to be finalized
