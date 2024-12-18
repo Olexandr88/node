@@ -334,7 +334,7 @@ func (r *E2ERunner) BroadcastTxSync(tx *solana.Transaction) (solana.Signature, *
 
 	var (
 		start   = time.Now()
-		timeout = 4 * time.Minute // Solana tx expires automatically after 2 minutes, but adding a buffer just in case
+		timeout = 2 * time.Minute // Solana tx expires automatically after 2 minutes, but adding a buffer just in case
 	)
 
 	// wait for the transaction to be finalized
@@ -343,9 +343,13 @@ func (r *E2ERunner) BroadcastTxSync(tx *solana.Transaction) (solana.Signature, *
 		require.False(r, time.Since(start) > timeout, "waiting solana tx timeout")
 
 		time.Sleep(1 * time.Second)
-		out, err = r.SolanaClient.GetTransaction(r.Ctx, sig, &rpc.GetTransactionOpts{})
+		out, err = r.SolanaClient.GetTransaction(r.Ctx, sig, &rpc.GetTransactionOpts{
+			Commitment: rpc.CommitmentConfirmed,
+		})
 		if err == nil {
 			break
+		} else {
+			r.Logger.Info("error getting tx %s", err.Error())
 		}
 	}
 
